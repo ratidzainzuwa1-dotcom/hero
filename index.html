@@ -110,6 +110,15 @@
 			</div>
 		</section>
 
+		<section id="team-buys" class="section container">
+			<h2>Live Team Buys (Demo)</h2>
+			<div class="team-buys">
+				<div id="teamGrid" class="team-grid">
+					<!-- populated by JS -->
+				</div>
+			</div>
+		</section>
+
 		<section id="roadmap" class="section container">
 			<h2>Development Roadmap</h2>
 			<div class="timeline">
@@ -131,6 +140,34 @@
 		</section>
 	</main>
 
+	<!-- Modal for Team Buy details -->
+	<div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-hidden="true">
+		<div class="modal" role="document">
+			<div class="modal-header">
+				<h3 id="modalTitle">Team Buy</h3>
+				<button id="modalClose" class="modal-close">Close</button>
+			</div>
+			<div class="modal-body">
+				<img id="modalImage" src="/assets/product-1.svg" alt="product">
+				<div>
+					<div id="modalMeta" class="meta muted">Details</div>
+					<div class="progress-wrap" style="margin-top:.6rem">
+						<div class="progress-label">Raised: <strong id="modalRaised">$0</strong> of <span id="modalGoal">$0</span></div>
+						<div class="progress"><div id="modalBar" class="progress-bar" style="width:0"></div></div>
+					</div>
+					<div class="contributors">
+						<h4>Contributors</h4>
+						<ul id="modalContribs" class="muted"></ul>
+					</div>
+					<div style="margin-top:1rem">
+						<button id="modalContribute" class="btn primary">Contribute $50 (demo)</button>
+						<button id="modalShare" class="btn ghost">Copy Link</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<footer class="site-footer">
 		<div class="container footer-grid">
 			<div>
@@ -148,49 +185,92 @@
 	</footer>
 
 	<script>
-		// Fetch demo team buys from the API and populate UI
-		async function loadDemo(){
+		// Demo: Fetch team buys and render list + modal interactions
+		let demoData = [];
+
+		async function fetchTeamBuys(){
 			try{
 				const res = await fetch('/api/team-buys');
 				const data = await res.json();
-				const team = data && data[0];
-				if(!team) return;
-				document.getElementById('productTitle').textContent = team.title;
-				const img = document.getElementById('productImg');
-				img.src = team.image || '/assets/product-1.svg';
-				img.alt = team.title;
-				const raisedEl = document.getElementById('raisedAmount');
-				const goalEl = document.getElementById('goalAmount');
-				raisedEl.textContent = '$' + team.raised;
-				goalEl.textContent = '$' + team.goal;
-				const pct = Math.round((team.raised / team.goal) * 100);
-				document.getElementById('progressBar').style.width = Math.min(100,pct) + '%';
-				// store shareUrl on the copy button dataset
-				document.getElementById('copyLink').dataset.share = team.shareUrl || '';
-			}catch(err){
-				console.error('Failed to load demo', err);
-			}
+				demoData = data || [];
+				renderPreview(demoData[0]);
+				renderTeamGrid(demoData);
+			}catch(e){console.error('Failed to load demo data', e)}
 		}
 
+		function renderPreview(team){
+			if(!team) return;
+			document.getElementById('productTitle').textContent = team.title;
+			const img = document.getElementById('productImg');
+			img.src = team.image || '/assets/product-1.svg';
+			img.alt = team.title;
+			document.getElementById('raisedAmount').textContent = '$' + team.raised;
+			document.getElementById('goalAmount').textContent = '$' + team.goal;
+			document.getElementById('progressBar').style.width = Math.min(100, Math.round((team.raised / team.goal) * 100)) + '%';
+			document.getElementById('copyLink').dataset.share = team.shareUrl || '';
+			// attach open modal to preview contribute button
+			document.getElementById('contribute').onclick = () => openModal(team.id);
+		}
+
+		function renderTeamGrid(list){
+			const grid = document.getElementById('teamGrid');
+			grid.innerHTML = '';
+			(list||[]).forEach(item => {
+				const el = document.createElement('div');
+				el.className = 'team-card';
+				el.innerHTML = `
+					<img src="${item.image}" alt="${item.title}">
+					<div>
+						<h5>${item.title}</h5>
+						<div class="meta">Raised $${item.raised} • Goal $${item.goal}</div>
+					</div>`;
+				el.addEventListener('click',()=> openModal(item.id));
+				grid.appendChild(el);
+			});
+		}
+
+		function openModal(id){
+			const item = demoData.find(d=>d.id===id);
+			if(!item) return;
+			document.getElementById('modalTitle').textContent = item.title;
+			document.getElementById('modalImage').src = item.image;
+			document.getElementById('modalRaised').textContent = '$'+item.raised;
+			document.getElementById('modalGoal').textContent = '$'+item.goal;
+			document.getElementById('modalBar').style.width = Math.min(100, Math.round((item.raised / item.goal) * 100)) + '%';
+			const ul = document.getElementById('modalContribs'); ul.innerHTML = '';
+			(item.contributors||[]).forEach(c=>{ const li = document.createElement('li'); li.textContent = `${c.name} — $${c.amount}`; ul.appendChild(li); });
+			document.getElementById('modalShare').dataset.share = item.shareUrl || '';
+			const backdrop = document.getElementById('modalBackdrop'); backdrop.style.display='flex'; backdrop.setAttribute('aria-hidden','false');
+			// wire contribute demo
+			document.getElementById('modalContribute').onclick = ()=>{
+				// simple demo: add a contributor and update UI
+				const added = 50; item.raised += added; item.contributors.push({name:'You', amount:added});
+				document.getElementById('modalRaised').textContent = '$'+item.raised;
+				document.getElementById('modalBar').style.width = Math.min(100, Math.round((item.raised / item.goal) * 100)) + '%';
+				const li = document.createElement('li'); li.textContent = `You — $${added}`; document.getElementById('modalContribs').appendChild(li);
+				// also update preview and grid
+				renderPreview(item);
+				renderTeamGrid(demoData);
+			};
+			// share btn
+			document.getElementById('modalShare').onclick = async function(){
+				const url = this.dataset.share || item.shareUrl || 'https://mini.group/team/EXAMPLE';
+				try{ await navigator.clipboard.writeText(url); this.textContent='Copied!'; setTimeout(()=> this.textContent='Copy Link',2000);}catch(e){alert('Copy failed: '+url)}
+			};
+		}
+
+		// close modal
+		document.getElementById('modalClose').addEventListener('click', ()=>{ const b = document.getElementById('modalBackdrop'); b.style.display='none'; b.setAttribute('aria-hidden','true'); });
+		document.getElementById('modalBackdrop').addEventListener('click', (e)=>{ if(e.target.id==='modalBackdrop'){ const b = document.getElementById('modalBackdrop'); b.style.display='none'; b.setAttribute('aria-hidden','true'); } });
+
+		// copy link from hero
 		document.getElementById('copyLink')?.addEventListener('click', async function(){
 			const demoLink = this.dataset.share || 'https://mini.group/team/EXAMPLE123';
 			try{ await navigator.clipboard.writeText(demoLink); this.textContent='Copied!'; setTimeout(()=> this.textContent='Copy Share Link',2000);}catch(e){alert('Copy failed — here is the link: '+demoLink)}
 		});
 
-		document.getElementById('contribute')?.addEventListener('click', function(){
-			const bar = document.getElementById('progressBar');
-			const raisedEl = document.getElementById('raisedAmount');
-			let current = parseInt((raisedEl.textContent || '$0').replace(/[^0-9]/g,'')) || 0;
-			const added = 50; // demo increment
-			current = current + added;
-			raisedEl.textContent = '$' + current;
-			const goal = parseInt((document.getElementById('goalAmount').textContent || '$1').replace(/[^0-9]/g,'')) || 1;
-			const pct = Math.round((current / goal) * 100);
-			bar.style.width = Math.min(100,pct) + '%';
-		});
-
 		// initial load
-		loadDemo();
+		fetchTeamBuys();
 	</script>
 </body>
 </html>

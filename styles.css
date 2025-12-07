@@ -77,3 +77,27 @@ body{
 /* small utilities */
 .muted{color:var(--muted)}
 .accent-text{color:var(--accent)}
+
+/* Team Buys list */
+.team-buys{margin-top:1rem}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.team-card{background:rgba(255,255,255,0.03);padding:1rem;border-radius:12px;display:flex;gap:1rem;align-items:center}
+.team-card img{width:72px;height:64px;border-radius:8px}
+.team-card h5{margin:0;font-size:1rem}
+.team-card .meta{color:var(--muted);font-size:.9rem}
+
+/* Modal */
+.modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;padding:2rem;z-index:60}
+.modal{background:#061126;border-radius:12px;padding:1.2rem;max-width:720px;width:100%;box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+.modal-header{display:flex;justify-content:space-between;align-items:center}
+.modal-body{display:grid;grid-template-columns:160px 1fr;gap:1rem;margin-top:1rem}
+.modal-body img{width:100%;border-radius:8px}
+.contributors{margin-top:1rem}
+.contributors li{display:flex;justify-content:space-between;padding:.4rem 0;border-bottom:1px dashed rgba(255,255,255,0.03)}
+.modal-close{background:transparent;border:0;color:var(--muted);font-size:1rem}
+
+@media (max-width:900px){
+  .team-grid{grid-template-columns:1fr 1fr}
+  .modal-body{grid-template-columns:1fr}
+}
+
