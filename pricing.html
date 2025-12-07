@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pricing — Mini Group</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/scripts/site.js" defer></script>
+</head>
+<body>
+  <header class="nav"><div class="container nav-inner"><div class="logo">Mini <span class="accent">Group</span></div><nav class="nav-links"><a href="/">Home</a><a href="/features.html">Features</a><a href="/demo.html">Demo</a></nav></div></header>
+  <main class="container section">
+    <h1>Pricing</h1>
+    <p class="lead">Simple pricing to get startups and communities started quickly.</p>
+    <div class="grid-3 reveal">
+      <div class="card">
+        <h3>Free</h3>
+        <p>Basic Team Buys up to $500, community features, email support.</p>
+      </div>
+      <div class="card">
+        <h3>Pro — $29/mo</h3>
+        <p>Higher limits, seller tools, priority support, and analytics.</p>
+      </div>
+      <div class="card">
+        <h3>Enterprise</h3>
+        <p>Custom pricing for platforms and big sellers — contact us for details.</p>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-grid"><div class="logo">Mini <span class="accent">Group</span></div><div class="footer-links"><a href="/">Home</a><a href="/features.html">Features</a></div></div></footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+      document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in-view'));
+      if(window.animateGrid) window.animateGrid('.grid-3');
+    });
+  </script>
+</body>
+</html>

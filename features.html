@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Features — Mini Group</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/scripts/site.js" defer></script>
+</head>
+<body>
+  <header class="nav"><div class="container nav-inner"><div class="logo">Mini <span class="accent">Group</span></div><nav class="nav-links"><a href="/">Home</a><a href="/demo.html">Demo</a><a href="/pricing.html">Pricing</a><a href="/roadmap.html">Roadmap</a></nav></div></header>
+  <main class="container section">
+    <h1>Features</h1>
+    <p class="lead">A deeper look at what Mini Group offers — built to make group buying simple and safe.</p>
+
+    <div class="features-grid reveal">
+      <div class="feature">
+        <h4>One-click Import</h4>
+        <p>Use our bookmarklet to import any product page into a Team Buy automatically.</p>
+      </div>
+      <div class="feature">
+        <h4>Smart Pricing</h4>
+        <p>AI-assisted price suggestions, bulk discounts and dynamic thresholds for optimal conversion.</p>
+      </div>
+      <div class="feature">
+        <h4>Escrow & Refunds</h4>
+        <p>Secure payment processing with automatic refunds for unmet goals.</p>
+      </div>
+      <div class="feature">
+        <h4>Seller Tools</h4>
+        <p>Offer structured team discounts, view analytics, and manage orders from one dashboard.</p>
+      </div>
+      <div class="feature">
+        <h4>Discovery Feed</h4>
+        <p>Find trending Team Buys from your network with curated recommendations.</p>
+      </div>
+      <div class="feature">
+        <h4>Mobile-first UI</h4>
+        <p>Designed for fast sharing and quick contributions on the go.</p>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container footer-grid"><div class="logo">Mini <span class="accent">Group</span></div><div class="footer-links"><a href="/">Home</a><a href="/demo.html">Demo</a></div></div></footer>
+  <script>
+    // trigger reveals and optional grid animation
+    document.addEventListener('DOMContentLoaded', ()=>{
+      document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in-view'));
+      if(window.animateGrid) window.animateGrid('.features-grid');
+    });
+  </script>
+</body>
+</html>

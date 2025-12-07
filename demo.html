@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Interactive Demo — Mini Group</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/scripts/site.js" defer></script>
+</head>
+<body>
+  <header class="nav"><div class="container nav-inner"><div class="logo">Mini <span class="accent">Group</span></div><nav class="nav-links"><a href="/">Home</a><a href="/features.html">Features</a><a href="/roadmap.html">Roadmap</a></nav></div></header>
+  <main class="container section">
+    <h1>Interactive Demo</h1>
+    <p class="lead">Try out the Team Buy simulation below. Click any card to preview and join.</p>
+
+    <section id="demo-grid" class="grid demo-grid reveal">
+      <!-- JS will populate demo cards from /api/team-buys -->
+    </section>
+  </main>
+  <footer class="site-footer"><div class="container footer-grid"><div class="logo">Mini <span class="accent">Group</span></div><div class="footer-links"><a href="/">Home</a><a href="/features.html">Features</a></div></div></footer>
+
+  <template id="card-tpl">
+    <article class="card product-card">
+      <div class="thumb"></div>
+      <div class="meta">
+        <h3 class="title"></h3>
+        <p class="price"></p>
+        <div class="progress"><div class="bar"></div></div>
+      </div>
+      <button class="btn small join">Preview</button>
+    </article>
+  </template>
+
+  <script>
+    (async function(){
+      const res = await fetch('/api/team-buys');
+      const data = await res.json();
+      window.demoData = data || [];
+      const grid = document.getElementById('demo-grid');
+      const tpl = document.getElementById('card-tpl');
+      window.demoData.forEach(item=>{
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('.thumb').style.backgroundImage = `url(${item.image})`;
+        node.querySelector('.title').textContent = item.title;
+        node.querySelector('.price').textContent = item.price || ('$'+(item.price || '0'));
+        const pct = Math.min(100, Math.round(((item.joined||item.raised||0)/(item.goal||1))*100));
+        node.querySelector('.bar').style.width = pct+'%';
+        node.querySelector('.join').addEventListener('click', ()=>{
+          openModal(item.id);
+        });
+        grid.appendChild(node);
+      });
+      requestAnimationFrame(()=>{
+        document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in-view'));
+        if(window.animateGrid) window.animateGrid('#demo-grid');
+      });
+    })();
+
+    // Minimal modal implementation for demo page
+    function openModal(id){
+      const item = (window.demoData||[]).find(d=>d.id===id);
+      if(!item) return;
+      const modal = document.getElementById('demoModal');
+      modal.querySelector('.modal-title').textContent = item.title;
+      modal.querySelector('.modal-img').src = item.image;
+      modal.querySelector('.modal-raised').textContent = '$'+(item.raised||item.joined||0);
+      modal.querySelector('.modal-goal').textContent = '$'+(item.goal||0);
+      const contribList = modal.querySelector('.modal-contribs'); contribList.innerHTML='';
+      (item.contributors||[]).forEach(c=>{ const li = document.createElement('li'); li.textContent = `${c.name} — $${c.amount}`; contribList.appendChild(li); });
+      modal.style.display='flex'; modal.setAttribute('aria-hidden','false');
+      trapFocus(modal);
+    }
+
+    function closeModal(){ const m = document.getElementById('demoModal'); if(!m) return; m.style.display='none'; m.setAttribute('aria-hidden','true'); }
+
+    function trapFocus(container){
+      if(!container) return;
+      const focusable = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if(!focusable.length) return;
+      const first = focusable[0]; const last = focusable[focusable.length-1];
+      function handler(e){ if(e.key !== 'Tab') return; if(e.shiftKey){ if(document.activeElement===first){ e.preventDefault(); last.focus(); } } else { if(document.activeElement===last){ e.preventDefault(); first.focus(); } } }
+      document.addEventListener('keydown', handler);
+      // cleanup when closed
+      const obs = new MutationObserver(()=>{ if(container.style.display === 'none' || container.getAttribute('aria-hidden')==='true'){ document.removeEventListener('keydown', handler); obs.disconnect(); } });
+      obs.observe(container, {attributes:true, attributeFilter:['style','aria-hidden']});
+    }
+
+    // attach close handlers
+    document.addEventListener('click', (e)=>{
+      if(e.target.matches('.modal-close') || e.target.closest('.modal-close')) closeModal();
+      if(e.target.id === 'demoModal') closeModal();
+    });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+  </script>
+
+  <!-- Modal markup -->
+  <div id="demoModal" class="modal-backdrop" role="dialog" aria-hidden="true" style="display:none">
+    <div class="modal" role="document">
+      <div class="modal-header">
+        <h3 class="modal-title">Preview</h3>
+        <button class="modal-close">Close</button>
+      </div>
+      <div class="modal-body" style="display:flex;gap:1rem;align-items:flex-start">
+        <img class="modal-img" src="/assets/product-1.svg" alt="product" style="width:140px;height:auto">
+        <div>
+          <div class="meta muted">Raised: <strong class="modal-raised">$0</strong> of <span class="modal-goal">$0</span></div>
+          <div class="contributors"><h4>Contributors</h4><ul class="modal-contribs muted"></ul></div>
+          <div style="margin-top:1rem"><button class="btn primary modal-close">Close</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
