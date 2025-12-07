@@ -11,5 +11,29 @@
       {"name":"John","amount":150},
       {"name":"Ngozi","amount":170}
     ]
+  },
+  {
+    "id": "demo-2",
+    "title": "Handmade Woven Basket",
+    "image": "/assets/product-2.svg",
+    "raised": 85,
+    "goal": 300,
+    "shareUrl": "https://mini.group/team/DEMO456",
+    "contributors": [
+      {"name":"Fatima","amount":35},
+      {"name":"Eddie","amount":50}
+    ]
+  },
+  {
+    "id": "demo-3",
+    "title": "Artisanal Floor Lamp",
+    "image": "/assets/product-3.svg",
+    "raised": 220,
+    "goal": 500,
+    "shareUrl": "https://mini.group/team/DEMO789",
+    "contributors": [
+      {"name":"Chike","amount":120},
+      {"name":"Nia","amount":100}
+    ]
   }
 ]

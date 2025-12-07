@@ -1,0 +1,14 @@
+<svg width="600" height="400" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Handmade lamp">
+  <defs>
+    <linearGradient id="g3" x1="0" x2="1">
+      <stop offset="0" stop-color="#e8f9ff"/>
+      <stop offset="1" stop-color="#f0fff4"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#g3)" rx="18"/>
+  <g transform="translate(120,80)" fill="#24303a">
+    <rect x="80" y="40" width="140" height="200" rx="10" fill="#1f2937"/>
+    <circle cx="150" cy="40" r="36" fill="#ffd36b"/>
+  </g>
+  <text x="36" y="34" font-size="20" fill="#0b1220" font-family="Inter, Arial">Artisanal Floor Lamp</text>
+</svg>

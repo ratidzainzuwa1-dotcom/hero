@@ -215,7 +215,7 @@
 		function renderTeamGrid(list){
 			const grid = document.getElementById('teamGrid');
 			grid.innerHTML = '';
-			(list||[]).forEach(item => {
+			(list||[]).forEach((item, i) => {
 				const el = document.createElement('div');
 				el.className = 'team-card';
 				el.innerHTML = `
@@ -225,8 +225,28 @@
 						<div class="meta">Raised $${item.raised} • Goal $${item.goal}</div>
 					</div>`;
 				el.addEventListener('click',()=> openModal(item.id));
+				// staggered reveal
+				el.style.opacity = 0;
+				el.style.transition = 'opacity .5s ease, transform .4s ease';
+				el.style.transitionDelay = (i * 80) + 'ms';
+				el.classList.add('reveal');
 				grid.appendChild(el);
 			});
+		}
+
+		function setupObserver(){
+			const items = document.querySelectorAll('.reveal, .card, .feature, .timeline .item, .hero-content, .hero-card');
+			const obs = new IntersectionObserver((entries)=>{
+				entries.forEach(entry=>{
+					if(entry.isIntersecting){
+						entry.target.classList.add('in-view');
+						entry.target.style.opacity = 1;
+						// unobserve to avoid retrigger
+						obs.unobserve(entry.target);
+					}
+				});
+			},{threshold:0.12});
+			items.forEach(i=>obs.observe(i));
 		}
 
 		function openModal(id){
@@ -270,7 +290,7 @@
 		});
 
 		// initial load
-		fetchTeamBuys();
+		fetchTeamBuys().then(()=> setupObserver()).catch(()=> setupObserver());
 	</script>
 </body>
 </html>
