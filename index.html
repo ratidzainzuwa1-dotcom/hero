@@ -272,7 +272,7 @@
 			document.getElementById('modalShare').dataset.share = item.shareUrl || '';
 			const backdrop = document.getElementById('modalBackdrop'); backdrop.style.display='flex'; backdrop.setAttribute('aria-hidden','false');
 			// move focus to close button for accessibility
-			setTimeout(()=>{ const close = document.getElementById('modalClose'); if(close) close.focus(); }, 60);
+			setTimeout(()=>{ const close = document.getElementById('modalClose'); if(close) close.focus(); trapFocus(document.getElementById('modalBackdrop')); }, 60);
 			// wire contribute demo
 			document.getElementById('modalContribute').onclick = ()=>{
 				// simple demo: add a contributor and update UI
@@ -303,6 +303,30 @@
 				const mobile = document.getElementById('navMobile'); if(mobile && mobile.style.display==='block'){ toggleMobileNav(false); }
 			}
 		});
+
+		// Focus trap utility — keeps tab focus inside the modal while open
+		function trapFocus(container){
+			if(!container) return;
+			const focusable = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+			if(!focusable.length) return;
+			const first = focusable[0];
+			const last = focusable[focusable.length -1];
+			function handle(e){
+				if(e.key !== 'Tab') return;
+				if(e.shiftKey){ if(document.activeElement === first){ e.preventDefault(); last.focus(); } }
+				else{ if(document.activeElement === last){ e.preventDefault(); first.focus(); } }
+			}
+			container.__trapHandler = handle;
+			document.addEventListener('keydown', handle);
+			// cleanup when closed
+			const observer = new MutationObserver(()=>{
+				if(container.style.display === 'none' || container.getAttribute('aria-hidden') === 'true'){
+					document.removeEventListener('keydown', handle);
+					observer.disconnect();
+				}
+			});
+			observer.observe(container, {attributes:true, attributeFilter:['style','aria-hidden']});
+		}
 
 		// mobile nav toggle
 		const navToggleBtn = document.getElementById('navToggle');
