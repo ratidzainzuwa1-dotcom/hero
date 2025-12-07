@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Mini Group — Social Group Buying</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<header class="nav">
+		<div class="container nav-inner">
+			<div class="logo">Mini <span class="accent">Group</span></div>
+			<nav class="nav-links">
+				<a href="#how">How it Works</a>
+				<a href="#features">Features</a>
+				<a href="#roadmap">Roadmap</a>
+				<a class="cta" href="#create">Create Team Buy</a>
+			</nav>
+		</div>
+	</header>
+
+	<main>
+		<section class="hero">
+			<div class="container hero-grid">
+				<div class="hero-content">
+					<h1>Buy Together. Save Together.</h1>
+					<p class="lead">Mini Group taps social commerce to remove middlemen — better prices for buyers, higher margins for sellers. Paste any product link, create a Team Buy, share it, and let people contribute.</p>
+					<div class="hero-ctas">
+						<a class="btn primary" href="#create">Create Team Buy</a>
+						<a class="btn ghost" href="#how">Learn How</a>
+					</div>
+					<ul class="benefits">
+						<li>Import from any store (Amazon, eBay, Shopify)</li>
+						<li>Secure contributions & escrow</li>
+						<li>Shareable links & social visuals</li>
+					</ul>
+				</div>
+				<div class="hero-card" aria-hidden>
+					<div class="product-preview">
+						<div class="product-img"></div>
+						<div class="product-body">
+							<h3 class="product-title">Example: Handmade Kitenge Sofa</h3>
+							<div class="progress-wrap">
+								<div class="progress-label">Raised: <strong>$420</strong> of $1,200</div>
+								<div class="progress"><div class="progress-bar" style="width:35%"></div></div>
+								<div class="progress-cta">
+									<button id="copyLink" class="btn small">Copy Share Link</button>
+									<button id="contribute" class="btn small primary">Contribute</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="how" class="section container">
+			<h2>How the App Works</h2>
+			<div class="grid-3">
+				<div class="card">
+					<svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 2v20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+					<h3>Import a Product</h3>
+					<p>Paste any product URL — the app parses title, image, and price, letting you source directly from the seller.</p>
+				</div>
+				<div class="card">
+					<svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M3 12h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+					<h3>Create a Team Buy</h3>
+					<p>Set a target amount, deadline, and contributor limits. Get a shareable link and visual for social networks.</p>
+				</div>
+				<div class="card">
+					<svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 3a9 9 0 100 18 9 9 0 000-18z" stroke="currentColor" stroke-width="1.5"/></svg>
+					<h3>Collect & Execute</h3>
+					<p>Funds are held in escrow. If the goal is met, the platform completes the purchase and arranges shipping. Otherwise, refunds are issued.</p>
+				</div>
+			</div>
+		</section>
+
+		<section id="features" class="section alt">
+			<div class="container">
+				<h2>Key Features</h2>
+				<div class="features-grid">
+					<div class="feature">
+						<h4>Social Login</h4>
+						<p>Fast sign-up via Google, Facebook, Apple.</p>
+					</div>
+					<div class="feature">
+						<h4>Link Parser</h4>
+						<p>Easily import products from any store with a bookmarklet or pasted URL.</p>
+					</div>
+					<div class="feature">
+						<h4>Team Dashboard</h4>
+						<p>Track all created and joined teams, contributors, and progress at a glance.</p>
+					</div>
+					<div class="feature">
+						<h4>Secure Payments</h4>
+						<p>Stripe/PayPal integration with escrow handling and refunds on unmet goals.</p>
+					</div>
+					<div class="feature">
+						<h4>AI Assistant</h4>
+						<p>24/7 smart suggestions, one-time offers, ad copy, and cashflow help.</p>
+					</div>
+					<div class="feature">
+						<h4>Seller Portal</h4>
+						<p>List products, offer group discounts, and monitor team buys.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="roadmap" class="section container">
+			<h2>Development Roadmap</h2>
+			<div class="timeline">
+				<div class="item"><strong>Phase 1 (MVP, 2-3 weeks)</strong> — Registration, create Team Buy, shareable page, Stripe payments, simple admin.
+				</div>
+				<div class="item"><strong>Phase 2 (V1)</strong> — Automated refunds, in-team chat, user profiles, notifications.
+				</div>
+				<div class="item"><strong>Phase 3 (Scale)</strong> — Native apps, seller integrations, split shipping, discovery feed.
+				</div>
+			</div>
+		</section>
+
+		<section id="create" class="section cta-section">
+			<div class="container">
+				<h2>Ready to start a Team Buy?</h2>
+				<p>Create a shareable campaign, invite contributors, and unlock collective buying power.</p>
+				<a class="btn large primary" href="#">Create Your Team Buy</a>
+			</div>
+		</section>
+	</main>
+
+	<footer class="site-footer">
+		<div class="container footer-grid">
+			<div>
+				<div class="logo">Mini <span class="accent">Group</span></div>
+				<p class="muted">Helping African businesses scale through social commerce.</p>
+			</div>
+			<div class="footer-links">
+				<a href="#how">How it works</a>
+				<a href="#features">Features</a>
+				<a href="#roadmap">Roadmap</a>
+				<a href="#">Contact</a>
+			</div>
+		</div>
+		<div class="footer-bottom container">© 2025 Mini Group — Built for communities and small businesses.</div>
+	</footer>
+
+	<script>
+		// Small interactivity: copy link + animate progress demo
+		document.getElementById('copyLink')?.addEventListener('click', async function(){
+			const demoLink = 'https://mini.group/team/EXAMPLE123';
+			try{ await navigator.clipboard.writeText(demoLink); this.textContent='Copied!'; setTimeout(()=> this.textContent='Copy Share Link',2000);}catch(e){alert('Copy failed — here is the link: '+demoLink)}
+		});
+
+		document.getElementById('contribute')?.addEventListener('click', function(){
+			const bar = document.querySelector('.progress-bar');
+			let width = parseFloat(bar.style.width) || 35;
+			width = Math.min(100, width + 8);
+			bar.style.width = width + '%';
+			// update label
+			const label = document.querySelector('.progress-label strong');
+			if(label){ const current = parseInt(label.textContent.replace('$','')) || 420; const added = 50; label.textContent = '$'+(current + added);}    
+		});
+	</script>
+</body>
+</html>
