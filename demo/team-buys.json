@@ -3,13 +3,26 @@
     "id": "demo-1",
     "title": "Handmade Kitenge Sofa (LARGE)",
     "image": "/assets/product-1.svg",
-    "raised": 420,
+    "raised": 445,
     "goal": 1200,
     "shareUrl": "https://mini.group/team/DEMO123",
     "contributors": [
-      {"name":"Amina","amount":100},
-      {"name":"John","amount":150},
-      {"name":"Ngozi","amount":170}
+      {
+        "name": "Amina",
+        "amount": 100
+      },
+      {
+        "name": "John",
+        "amount": 150
+      },
+      {
+        "name": "Ngozi",
+        "amount": 170
+      },
+      {
+        "name": "Tester",
+        "amount": 25
+      }
     ]
   },
   {
@@ -20,8 +33,14 @@
     "goal": 300,
     "shareUrl": "https://mini.group/team/DEMO456",
     "contributors": [
-      {"name":"Fatima","amount":35},
-      {"name":"Eddie","amount":50}
+      {
+        "name": "Fatima",
+        "amount": 35
+      },
+      {
+        "name": "Eddie",
+        "amount": 50
+      }
     ]
   },
   {
@@ -32,8 +51,14 @@
     "goal": 500,
     "shareUrl": "https://mini.group/team/DEMO789",
     "contributors": [
-      {"name":"Chike","amount":120},
-      {"name":"Nia","amount":100}
+      {
+        "name": "Chike",
+        "amount": 120
+      },
+      {
+        "name": "Nia",
+        "amount": 100
+      }
     ]
   }
 ]
