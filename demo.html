@@ -68,6 +68,7 @@
       const contribList = modal.querySelector('.modal-contribs'); contribList.innerHTML='';
       (item.contributors||[]).forEach(c=>{ const li = document.createElement('li'); li.textContent = `${c.name} — $${c.amount}`; contribList.appendChild(li); });
       modal.style.display='flex'; modal.setAttribute('aria-hidden','false');
+      modal.dataset.currentId = id;
       trapFocus(modal);
     }
 
@@ -91,6 +92,46 @@
       if(e.target.id === 'demoModal') closeModal();
     });
     document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+
+    // handle join form submission
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const form = document.getElementById('joinForm');
+      if(!form) return;
+      form.addEventListener('submit', async (ev)=>{
+        ev.preventDefault();
+        const modal = document.getElementById('demoModal');
+        const id = modal?.dataset?.currentId;
+        if(!id) return;
+        const data = new FormData(form);
+        const payload = { name: data.get('name'), amount: Number(data.get('amount')) };
+        const msg = document.getElementById('joinMsg');
+        msg.textContent = 'Sending...';
+        try{
+          const res = await fetch(`/api/team-buys/${id}/join`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+          if(!res.ok) throw new Error('Failed to join');
+          const body = await res.json();
+          // update local demoData from response
+          const item = body.item || (await (await fetch(`/api/team-buys/${id}`)).json());
+          // replace in window.demoData
+          window.demoData = (window.demoData||[]).map(d=> String(d.id)===String(id)? item : d);
+          // update UI
+          modal.querySelector('.modal-raised').textContent = '$'+(item.raised||item.joined||0);
+          const contribList = modal.querySelector('.modal-contribs'); contribList.innerHTML='';
+          (item.contributors||[]).forEach(c=>{ const li = document.createElement('li'); li.textContent = `${c.name} — $${c.amount}`; contribList.appendChild(li); });
+          // refresh grid and preview if present
+          if(window.animateGrid) window.animateGrid('#demo-grid');
+          // show success
+          msg.textContent = 'Thanks — your contribution is added (demo).';
+          setTimeout(()=>{ msg.textContent=''; }, 2500);
+        }catch(err){
+          console.error(err);
+          msg.textContent = 'Failed to join — try again';
+        }
+        // re-render main grid/preview
+        const grid = document.getElementById('demo-grid');
+        if(grid){ grid.innerHTML=''; const tpl = document.getElementById('card-tpl'); window.demoData.forEach(item=>{ const node = tpl.content.cloneNode(true); node.querySelector('.thumb').style.backgroundImage = `url(${item.image})`; node.querySelector('.title').textContent = item.title; node.querySelector('.price').textContent = item.price || ('$'+(item.price || '0')); const pct = Math.min(100, Math.round(((item.joined||item.raised||0)/(item.goal||1))*100)); node.querySelector('.bar').style.width = pct+'%'; node.querySelector('.join').addEventListener('click', ()=>{ openModal(item.id); }); grid.appendChild(node); }); requestAnimationFrame(()=>{ document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in-view')); if(window.animateGrid) window.animateGrid('#demo-grid'); }); }
+      });
+    });
   </script>
 
   <!-- Modal markup -->
@@ -105,7 +146,15 @@
         <div>
           <div class="meta muted">Raised: <strong class="modal-raised">$0</strong> of <span class="modal-goal">$0</span></div>
           <div class="contributors"><h4>Contributors</h4><ul class="modal-contribs muted"></ul></div>
-          <div style="margin-top:1rem"><button class="btn primary modal-close">Close</button></div>
+          <form id="joinForm" style="margin-top:1rem;display:grid;gap:.6rem;">
+            <label><span class="muted">Your name</span><input name="name" type="text" placeholder="Jane" required></label>
+            <label><span class="muted">Amount (USD)</span><input name="amount" type="number" min="1" value="50" required></label>
+            <div style="display:flex;gap:.6rem">
+              <button type="submit" class="btn primary">Contribute</button>
+              <button type="button" class="btn modal-close">Cancel</button>
+            </div>
+            <div id="joinMsg" style="color:var(--muted);font-size:.95rem"></div>
+          </form>
         </div>
       </div>
     </div>
