@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <header class="nav"><div class="container nav-inner"><div class="logo">Mini <span class="accent">Group</span></div><nav class="nav-links"><a href="/">Home</a><a href="/demo.html">Demo</a><a href="/features.html">Features</a><a href="/pricing.html">Pricing</a><a href="/ai.html">AI</a></nav></div></header>
+  <header class="nav"><div class="container nav-inner"><div class="logo">Mini <span class="accent">Group</span></div><nav class="nav-links"><a href="/">Home</a><a href="/demo.html">Demo</a><a href="/features.html">Features</a><a href="/pricing.html">Pricing</a><a href="/ai.html">AI</a><a href="/ai.html#ask">Ask LLM</a></nav></div></header>
 
   <main class="container section">
     <h1>AI Assistant</h1>
@@ -41,6 +41,14 @@
       const respEl = document.getElementById('llmResponse');
       const status = document.getElementById('aiStatus');
       const copyBtn = document.getElementById('copyResp');
+
+      function focusPrompt(){
+        try{ promptEl.focus(); promptEl.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){}
+      }
+
+      // Focus if URL contains #ask or when hash changes
+      if(location.hash === '#ask') focusPrompt();
+      window.addEventListener('hashchange', ()=>{ if(location.hash === '#ask') focusPrompt(); });
 
       async function postPrompt(text){
         status.textContent = 'Sending...';

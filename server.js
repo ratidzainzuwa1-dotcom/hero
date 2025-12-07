@@ -60,4 +60,27 @@ app.post('/api/team-buys/:id/join', (req, res) => {
   res.json({ ok: true, item });
 });
 
+// Proxy LLM requests to the Python AI service (same-origin for browser usage)
+app.post('/ai/llm', async (req, res) => {
+  const target = process.env.AI_URL || 'http://localhost:8000/llm';
+  try{
+    // use global fetch (Node 18+). Forward body as JSON.
+    const resp = await fetch(target, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body || {})
+    });
+    const contentType = resp.headers.get('content-type') || '';
+    if(contentType.includes('application/json')){
+      const json = await resp.json();
+      return res.status(resp.status).json(json);
+    }
+    const text = await resp.text();
+    return res.status(resp.status).send(text);
+  }catch(err){
+    console.error('AI proxy error', err);
+    return res.status(502).json({ error: 'AI service unreachable', detail: String(err) });
+  }
+});
+
 app.listen(PORT, () => console.log(`Mini Group demo server running on http://localhost:${PORT}`));
