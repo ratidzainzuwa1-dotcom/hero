@@ -1,0 +1,15 @@
+[
+  {
+    "id": "demo-1",
+    "title": "Handmade Kitenge Sofa (LARGE)",
+    "image": "/assets/product-1.svg",
+    "raised": 420,
+    "goal": 1200,
+    "shareUrl": "https://mini.group/team/DEMO123",
+    "contributors": [
+      {"name":"Amina","amount":100},
+      {"name":"John","amount":150},
+      {"name":"Ngozi","amount":170}
+    ]
+  }
+]

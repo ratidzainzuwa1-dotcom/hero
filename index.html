@@ -40,12 +40,12 @@
 				</div>
 				<div class="hero-card" aria-hidden>
 					<div class="product-preview">
-						<div class="product-img"></div>
+						<img id="productImg" class="product-img" src="/assets/product-1.svg" alt="Product image">
 						<div class="product-body">
-							<h3 class="product-title">Example: Handmade Kitenge Sofa</h3>
+							<h3 id="productTitle" class="product-title">Loading…</h3>
 							<div class="progress-wrap">
-								<div class="progress-label">Raised: <strong>$420</strong> of $1,200</div>
-								<div class="progress"><div class="progress-bar" style="width:35%"></div></div>
+								<div class="progress-label">Raised: <strong id="raisedAmount">$0</strong> of <span id="goalAmount">$0</span></div>
+								<div class="progress"><div id="progressBar" class="progress-bar" style="width:0"></div></div>
 								<div class="progress-cta">
 									<button id="copyLink" class="btn small">Copy Share Link</button>
 									<button id="contribute" class="btn small primary">Contribute</button>
@@ -148,21 +148,49 @@
 	</footer>
 
 	<script>
-		// Small interactivity: copy link + animate progress demo
+		// Fetch demo team buys from the API and populate UI
+		async function loadDemo(){
+			try{
+				const res = await fetch('/api/team-buys');
+				const data = await res.json();
+				const team = data && data[0];
+				if(!team) return;
+				document.getElementById('productTitle').textContent = team.title;
+				const img = document.getElementById('productImg');
+				img.src = team.image || '/assets/product-1.svg';
+				img.alt = team.title;
+				const raisedEl = document.getElementById('raisedAmount');
+				const goalEl = document.getElementById('goalAmount');
+				raisedEl.textContent = '$' + team.raised;
+				goalEl.textContent = '$' + team.goal;
+				const pct = Math.round((team.raised / team.goal) * 100);
+				document.getElementById('progressBar').style.width = Math.min(100,pct) + '%';
+				// store shareUrl on the copy button dataset
+				document.getElementById('copyLink').dataset.share = team.shareUrl || '';
+			}catch(err){
+				console.error('Failed to load demo', err);
+			}
+		}
+
 		document.getElementById('copyLink')?.addEventListener('click', async function(){
-			const demoLink = 'https://mini.group/team/EXAMPLE123';
+			const demoLink = this.dataset.share || 'https://mini.group/team/EXAMPLE123';
 			try{ await navigator.clipboard.writeText(demoLink); this.textContent='Copied!'; setTimeout(()=> this.textContent='Copy Share Link',2000);}catch(e){alert('Copy failed — here is the link: '+demoLink)}
 		});
 
 		document.getElementById('contribute')?.addEventListener('click', function(){
-			const bar = document.querySelector('.progress-bar');
-			let width = parseFloat(bar.style.width) || 35;
-			width = Math.min(100, width + 8);
-			bar.style.width = width + '%';
-			// update label
-			const label = document.querySelector('.progress-label strong');
-			if(label){ const current = parseInt(label.textContent.replace('$','')) || 420; const added = 50; label.textContent = '$'+(current + added);}    
+			const bar = document.getElementById('progressBar');
+			const raisedEl = document.getElementById('raisedAmount');
+			let current = parseInt((raisedEl.textContent || '$0').replace(/[^0-9]/g,'')) || 0;
+			const added = 50; // demo increment
+			current = current + added;
+			raisedEl.textContent = '$' + current;
+			const goal = parseInt((document.getElementById('goalAmount').textContent || '$1').replace(/[^0-9]/g,'')) || 1;
+			const pct = Math.round((current / goal) * 100);
+			bar.style.width = Math.min(100,pct) + '%';
 		});
+
+		// initial load
+		loadDemo();
 	</script>
 </body>
 </html>
