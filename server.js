@@ -83,4 +83,22 @@ app.post('/ai/llm', async (req, res) => {
   }
 });
 
+// Health check for AI service (probes AI_URL or localhost:8000)
+app.get('/ai/health', async (req, res) => {
+  const base = process.env.AI_URL_BASE || 'http://localhost:8000';
+  const targets = [base + '/health', base + '/'];
+  let ok = false; let lastErr = null; let statusCode = null; let used = null;
+  for(const t of targets){
+    try{
+      const start = Date.now();
+      const r = await fetch(t, { method: 'GET' });
+      const ms = Date.now() - start;
+      statusCode = r.status;
+      used = t;
+      if(r.ok){ ok = true; return res.json({ ok:true, url: t, status: r.status, latency_ms: ms }); }
+    }catch(err){ lastErr = String(err); continue; }
+  }
+  res.status(502).json({ ok:false, error: lastErr, status: statusCode, checked: targets, used: used });
+});
+
 app.listen(PORT, () => console.log(`Mini Group demo server running on http://localhost:${PORT}`));
