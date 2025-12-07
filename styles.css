@@ -70,6 +70,42 @@ body{
 
 .timeline .item{background:rgba(255,255,255,0.02);padding:1rem;border-radius:10px;margin-bottom:.6rem}
 
+/* demo grid & product cards */
+.demo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1rem}
+.product-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:0;border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.product-card .thumb{height:160px;background-size:cover;background-position:center}
+.product-card .meta{padding:1rem;display:flex;flex-direction:column;gap:.4rem}
+.product-card .title{margin:0;font-size:1rem}
+.product-card .price{color:var(--muted);font-weight:700}
+.product-card .join{margin:0 1rem 1rem;align-self:flex-end}
+
+/* modal polish */
+.modal-backdrop{backdrop-filter: blur(6px) saturate(120%)}
+.modal{background:linear-gradient(180deg,#071426,#061126);border:1px solid rgba(255,255,255,0.03)}
+.modal-header .modal-close{background:transparent;border:0;color:var(--muted);padding:.4rem .6rem}
+.modal-body{gap:1rem;align-items:start}
+.modal .meta{color:var(--muted);font-size:.95rem}
+
+/* timeline improvements */
+.timeline{display:flex;flex-direction:column;gap:.6rem}
+.timeline .item{position:relative;padding-left:1.2rem}
+.timeline .item::before{content:'';position:absolute;left:0;top:12px;width:8px;height:8px;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:50%}
+
+/* mobile and responsive tweaks */
+@media (max-width:900px){
+  .demo-grid{grid-template-columns:1fr 1fr}
+  .team-grid{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  .demo-grid{grid-template-columns:1fr}
+  .nav-toggle{display:inline-flex}
+  .nav-mobile{right:8px;left:8px}
+}
+
+/* subtle stagger helper when using animateGrid */
+.product-card{opacity:0;transform:translateY(10px)}
+.product-card.in-view{opacity:1;transform:none;transition:opacity .45s ease, transform .45s ease}
+
 .cta-section{background:linear-gradient(90deg, rgba(124,58,237,0.12), rgba(6,182,212,0.06));border-radius:12px;margin:2rem 0;padding:2rem}
 
 .footer-grid{display:flex;justify-content:space-between;gap:1rem;padding:2rem 0}
