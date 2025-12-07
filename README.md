@@ -7,6 +7,10 @@ Below is a short animated preview of the Mini Group demo landing page. It shows 
 
 ![Mini Group demo preview](assets/preview-animation.svg)
 
+Also available as a GIF (generated from the animated SVG):
+
+![Mini Group demo GIF preview](assets/preview.gif)
+
 Open `index.html` and run the local demo server to interact with the live version:
 
 ```bash
