@@ -1,9 +1,10 @@
 :root{
-  --bg:#0f1724;
-  --card:#0b1220;
-  --muted:#9aa4b2;
-  --accent:#7c3aed;
-  --accent-2:#06b6d4;
+  /* New 'Sunset' palette */
+  --bg:#071526; /* deep navy */
+  --card:#071823; /* card background */
+  --muted:#9fb3c8; /* soft muted text */
+  --accent:#ff6b6b; /* warm coral */
+  --accent-2:#ffd166; /* sunny amber */
   --glass: rgba(255,255,255,0.03);
   --radius:14px;
   --max:1100px;

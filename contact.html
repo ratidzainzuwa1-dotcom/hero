@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact — Mini Group</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/scripts/site.js" defer></script>
+</head>
+<body>
+  <header class="nav"><div class="container nav-inner"><div class="logo">Mini <span class="accent">Group</span></div><nav class="nav-links"><a href="/">Home</a><a href="/demo.html">Demo</a><a href="/features.html">Features</a><a href="/pricing.html">Pricing</a><a href="/about.html">About</a><a href="/team.html">Team</a></nav></div></header>
+  <main class="container section">
+    <h1>Contact</h1>
+    <p class="lead">Have a question or partnership idea? Reach out.</p>
+    <form action="#" method="post" class="reveal">
+      <label><span class="muted">Your name</span><input type="text" name="name" required></label>
+      <label><span class="muted">Email</span><input type="email" name="email" required></label>
+      <label><span class="muted">Message</span><textarea name="message" rows="5" required></textarea></label>
+      <div style="margin-top:1rem"><button class="btn primary">Send</button></div>
+    </form>
+  </main>
+  <footer class="site-footer"><div class="container footer-grid"><div class="logo">Mini <span class="accent">Group</span></div><div class="footer-links"><a href="/">Home</a><a href="/demo.html">Demo</a></div></div></footer>
+  <script>document.addEventListener('DOMContentLoaded', ()=>{document.querySelectorAll('.reveal').forEach(el=>el.classList.add('in-view'));});</script>
+</body>
+</html>
