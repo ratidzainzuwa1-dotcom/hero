@@ -12,13 +12,22 @@
 <body>
 	<header class="nav">
 		<div class="container nav-inner">
-			<div class="logo">Mini <span class="accent">Group</span></div>
+			<div style="display:flex;align-items:center;gap:1rem">
+				<button id="navToggle" class="nav-toggle" aria-expanded="false" aria-controls="navMobile">☰</button>
+				<div class="logo">Mini <span class="accent">Group</span></div>
+			</div>
 			<nav class="nav-links">
 				<a href="#how">How it Works</a>
 				<a href="#features">Features</a>
 				<a href="#roadmap">Roadmap</a>
 				<a class="cta" href="#create">Create Team Buy</a>
 			</nav>
+			<div id="navMobile" class="nav-mobile" aria-hidden="true">
+				<a href="#how">How it Works</a>
+				<a href="#features">Features</a>
+				<a href="#roadmap">Roadmap</a>
+				<a class="cta" href="#create">Create Team Buy</a>
+			</div>
 		</div>
 	</header>
 
@@ -27,6 +36,7 @@
 			<div class="container hero-grid">
 				<div class="hero-content">
 					<h1>Buy Together. Save Together.</h1>
+					<img src="/assets/hero-illustration.svg" alt="hero illustration" class="hero-illustration" />
 					<p class="lead">Mini Group taps social commerce to remove middlemen — better prices for buyers, higher margins for sellers. Paste any product link, create a Team Buy, share it, and let people contribute.</p>
 					<div class="hero-ctas">
 						<a class="btn primary" href="#create">Create Team Buy</a>
@@ -261,6 +271,8 @@
 			(item.contributors||[]).forEach(c=>{ const li = document.createElement('li'); li.textContent = `${c.name} — $${c.amount}`; ul.appendChild(li); });
 			document.getElementById('modalShare').dataset.share = item.shareUrl || '';
 			const backdrop = document.getElementById('modalBackdrop'); backdrop.style.display='flex'; backdrop.setAttribute('aria-hidden','false');
+			// move focus to close button for accessibility
+			setTimeout(()=>{ const close = document.getElementById('modalClose'); if(close) close.focus(); }, 60);
 			// wire contribute demo
 			document.getElementById('modalContribute').onclick = ()=>{
 				// simple demo: add a contributor and update UI
@@ -282,6 +294,29 @@
 		// close modal
 		document.getElementById('modalClose').addEventListener('click', ()=>{ const b = document.getElementById('modalBackdrop'); b.style.display='none'; b.setAttribute('aria-hidden','true'); });
 		document.getElementById('modalBackdrop').addEventListener('click', (e)=>{ if(e.target.id==='modalBackdrop'){ const b = document.getElementById('modalBackdrop'); b.style.display='none'; b.setAttribute('aria-hidden','true'); } });
+
+		// close modal with Escape and trap focus briefly
+		document.addEventListener('keydown', (e)=>{
+			if(e.key === 'Escape'){
+				const b = document.getElementById('modalBackdrop'); if(b && b.style.display==='flex'){ b.style.display='none'; b.setAttribute('aria-hidden','true'); }
+				// also close mobile nav if open
+				const mobile = document.getElementById('navMobile'); if(mobile && mobile.style.display==='block'){ toggleMobileNav(false); }
+			}
+		});
+
+		// mobile nav toggle
+		const navToggleBtn = document.getElementById('navToggle');
+		function toggleMobileNav(force){
+			const mobile = document.getElementById('navMobile');
+			if(!mobile) return;
+			const isOpen = typeof force === 'boolean' ? force : mobile.style.display === 'block';
+			if(isOpen){
+				mobile.style.display='none'; navToggleBtn.setAttribute('aria-expanded','false'); mobile.setAttribute('aria-hidden','true');
+			}else{
+				mobile.style.display='block'; navToggleBtn.setAttribute('aria-expanded','true'); mobile.setAttribute('aria-hidden','false');
+			}
+		}
+		navToggleBtn?.addEventListener('click', ()=> toggleMobileNav());
 
 		// copy link from hero
 		document.getElementById('copyLink')?.addEventListener('click', async function(){
