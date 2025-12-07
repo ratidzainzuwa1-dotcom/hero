@@ -1,0 +1,55 @@
+name: Generate README Preview GIF
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-preview:
+    name: Build preview GIF
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install system deps (ffmpeg, fonts, libs)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg libatk1.0-0 libgtk-3-0 libxss1 libasound2 libnss3 libxcomposite1 libxdamage1 libxrandr2 libpangocairo-1.0-0 libgbm1
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Run make-preview (Puppeteer + ffmpeg)
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'false'
+        run: npm run make-preview
+
+      - name: Upload preview GIF as artifact
+        if: success() && (exists('assets/preview.gif'))
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview-gif
+          path: assets/preview.gif
+
+      - name: Commit preview GIF back to main
+        if: success() && (exists('assets/preview.gif'))
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "actions@github.com"
+          git add -f assets/preview.gif
+          git commit -m "chore(preview): update generated preview.gif [ci skip]" || echo "no changes to commit"
+          git push origin HEAD:main || echo "push failed"
+
+      - name: Done
+        run: echo "Preview generation finished"
