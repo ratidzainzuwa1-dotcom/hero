@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "make-preview": "node tools/make-gif.js",
+    "install-browser": "node tools/install-browser.js"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "puppeteer": "^21.4.1"
   }
 }

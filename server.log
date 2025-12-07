@@ -1,0 +1,6 @@
+nohup: ignoring input
+
+> mini-group-demo@0.1.0 start
+> node server.js
+
+Mini Group demo server running on http://localhost:3000
